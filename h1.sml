@@ -109,11 +109,34 @@ fun dates_in_months_challenge(dates: (int * int * int) list, months: int list): 
   dates_in_months(dates, remove_duplicate_list(months, months))
 
 fun divisibleBy(x: int, y: int): bool = 
-  (x mod y) = 0 
+  if x = 0 then
+    true
+  else if x < 0 then
+    false
+  else
+    divisibleBy(x - y, y)
+
 
 fun reasonable_date(date: (int * int * int)): bool = 
   let
-    val leap = divisibleBy(#1 date, 400) orelse (divisibleBy(#1 date, 4) andalso not(divisibleBy(#1 date, 100))) 
+    val daysOfMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    val year = #1 date
+    val month = #2 date
+    val day = #3 date
+    val leap = divisibleBy(year, 400) orelse (divisibleBy(year, 4) andalso not(divisibleBy(year, 100)))
+    fun getDaysOfMonth(days: int list, monthIndex: int): int =
+      if monthIndex = 1 then
+        hd days
+      else
+        getDaysOfMonth(tl days, monthIndex - 1)
+    fun getMaxDay(): int =
+      if (month <> 2) then
+        getDaysOfMonth(daysOfMonth, month) 
+      else if (leap) then
+        29
+      else
+        28
+    val maxDay = getMaxDay()
   in  
-    #1 date > 0 andalso #2 date >= 1 andalso #2 date <= 12 andalso #3 date >=1 andalso ((#3 date <= 29 andalso leap) orelse (#3 date <= 28 andalso not leap))
+    year > 0 andalso month >= 1 andalso month <= 12 andalso day >= 1 andalso day <= maxDay 
   end
