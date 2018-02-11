@@ -136,7 +136,6 @@ fun reasonable_date(date: (int * int * int)): bool =
         29
       else
         28
-    val maxDay = getMaxDay()
   in  
-    year > 0 andalso month >= 1 andalso month <= 12 andalso day >= 1 andalso day <= maxDay 
+    year > 0 andalso month >= 1 andalso month <= 12 andalso day >= 1 andalso day <= getMaxDay()  
   end
